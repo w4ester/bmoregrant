@@ -1,6 +1,3 @@
-/* Grant Tracker – client-side app
-   Data is stored in localStorage under STORAGE_KEY.
-*/
 const STORAGE_KEY = 'grant-tracker.v1';
 
 const $ = (sel, root = document) => root.querySelector(sel);
