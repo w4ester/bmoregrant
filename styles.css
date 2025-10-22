@@ -488,8 +488,8 @@ input::placeholder{
 /* Feedback Button & Modal */
 .feedback-button {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 90px;
+  right: 24px;
   background: linear-gradient(135deg, var(--baltimore-orange) 0%, var(--baltimore-gold) 100%);
   color: white;
   border: none;
@@ -504,6 +504,7 @@ input::placeholder{
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .feedback-button:hover {
@@ -624,14 +625,20 @@ input::placeholder{
 
 @media (max-width: 768px) {
   .feedback-button {
-    bottom: 20px;
-    right: 20px;
-    padding: 14px 20px;
-    font-size: 0.95rem;
+    bottom: 88px;
+    right: 16px;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    gap: 6px;
+  }
+
+  .feedback-modal {
+    padding: 16px;
   }
 
   .feedback-modal-content {
-    padding: 24px;
+    padding: 24px 20px;
+    border-radius: 12px;
   }
 
   .feedback-option {
@@ -641,6 +648,57 @@ input::placeholder{
 
   .feedback-icon {
     font-size: 28px;
+  }
+}
+
+/* Extra small screens - make button icon-only */
+@media (max-width: 480px) {
+  .feedback-button {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    bottom: 80px;
+    right: 12px;
+    justify-content: center;
+    font-size: 1.75rem;
+    gap: 0;
+  }
+
+  .feedback-button:hover {
+    transform: scale(1.05);
+  }
+
+  /* Hide text on very small screens, show only emoji */
+  .feedback-text {
+    display: none;
+  }
+
+  .feedback-emoji {
+    line-height: 1;
+  }
+
+  .feedback-modal-content {
+    padding: 20px 16px;
+    max-height: 85vh;
+  }
+
+  .feedback-modal-content h2 {
+    font-size: 1.3rem;
+    padding-right: 30px;
+  }
+
+  .feedback-option {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .feedback-option strong {
+    font-size: 0.95rem;
+  }
+
+  .feedback-icon {
+    font-size: 24px;
   }
 }
 
