@@ -1189,21 +1189,21 @@
           <tbody>
             <tr>
               <td><strong>Personnel</strong></td>
-              <td class="amount">$95,000</td>
-              <td>38%</td>
-              <td>Program Director ($35K), ML Technical Lead ($40K), 3 Family Facilitators ($20K total)</td>
+              <td class="amount">$100,000</td>
+              <td>40%</td>
+              <td>Program Director ($35K), ML Technical Lead ($45K), 3 Family Facilitators ($20K total)</td>
             </tr>
             <tr>
-              <td><strong>Core AI Infrastructure (Mac Studios for Inference)</strong></td>
+              <td><strong>NVIDIA DGX Spark (Fine-Tuning)</strong></td>
+              <td class="amount">$10,000</td>
+              <td>4%</td>
+              <td>2x NVIDIA DGX Spark @ $4K each = $8K (1 petaflop each, 128GB unified memory, 4TB storage, Blackwell GPU). Clustered for fine-tuning models up to 405B parameters. Export to GGUF via Unsloth's save_pretrained_gguf()</td>
+            </tr>
+            <tr>
+              <td><strong>Mac Studios (Inference & Deployment)</strong></td>
               <td class="amount">$35,000</td>
               <td>14%</td>
-              <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access (inference optimized, not fine-tuning)</td>
-            </tr>
-            <tr>
-              <td><strong>Cloud NVIDIA Fine-Tuning</strong></td>
-              <td class="amount">$25,000</td>
-              <td>10%</td>
-              <td>NVIDIA GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning on H100/A100 GPUs - Export to GGUF, deploy to Mac Studios. Workflow: Fine-tune on NVIDIA → Convert to GGUF → Run on Mac Studios via Ollama</td>
+              <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access</td>
             </tr>
             <tr>
               <td><strong>Take-Home Devices</strong></td>
@@ -1213,15 +1213,15 @@
             </tr>
             <tr>
               <td><strong>Family Support</strong></td>
-              <td class="amount">$35,000</td>
-              <td>14%</td>
+              <td class="amount">$40,000</td>
+              <td>16%</td>
               <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
             </tr>
             <tr>
               <td><strong>Curriculum & Materials</strong></td>
-              <td class="amount">$15,000</td>
-              <td>6%</td>
-              <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials</td>
+              <td class="amount">$20,000</td>
+              <td>8%</td>
+              <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials, AI Literacy Learning platform (Prompt Lab, Tool Builder Studio, RAG Explorer, Model Lab, MCP Server Studio modules)</td>
             </tr>
             <tr>
               <td><strong>Software & Licenses</strong></td>
@@ -1255,14 +1255,17 @@
         </div>
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
-          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Technical Infrastructure (Hybrid NVIDIA + Mac Workflow)</h3>
+          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Technical Infrastructure (On-Premises NVIDIA DGX Spark + Mac Studios)</h3>
 
-          <p style="margin-bottom: 12px;"><strong>Step 1: Fine-Tuning on Cloud NVIDIA GPUs ($25K):</strong></p>
+          <p style="margin-bottom: 12px;"><strong>Step 1: Fine-Tuning on NVIDIA DGX Spark ($10K):</strong></p>
           <ul class="bullets">
-            <li><strong>RunPod/Lambda Labs H100/A100 GPUs</strong> - Fast fine-tuning with Unsloth (2x faster, 70% less memory)</li>
-            <li><strong>Workflow:</strong> Fine-tune Llama 3, Mistral, Qwen on powerful NVIDIA hardware</li>
-            <li><strong>Export to GGUF:</strong> Use Unsloth's model.save_pretrained_gguf() or llama.cpp conversion</li>
-            <li><strong>Why NVIDIA?</strong> Best for training/fine-tuning - much faster than Mac Studios</li>
+            <li><strong>2x NVIDIA DGX Spark</strong> @ $4K each = $8K + $2K accessories</li>
+            <li><strong>Performance:</strong> 1 petaflop AI performance per unit (2 petaflops total)</li>
+            <li><strong>Memory:</strong> 128GB unified memory per unit (256GB total)</li>
+            <li><strong>Capability:</strong> Fine-tune models up to 405B parameters when clustered (Llama 3 405B, GPT-OSS 20B+)</li>
+            <li><strong>Unsloth integration:</strong> 2x faster fine-tuning, 70% less memory usage</li>
+            <li><strong>Export to GGUF:</strong> model.save_pretrained_gguf() - one command</li>
+            <li><strong>On-site advantage:</strong> Always available for workshops, families see the hardware that trains their models</li>
           </ul>
 
           <p style="margin: 12px 0;"><strong>Step 2: Deploy to Mac Studios for Inference ($35K):</strong></p>
@@ -1278,8 +1281,8 @@
           <p style="margin: 12px 0;"><strong>Step 3: Family Access ($20K):</strong></p>
           <ul class="bullets">
             <li><strong>25x Mini PC kits</strong> @ $800 each - Connect to Mac Studios remotely or run smaller GGUF models locally</li>
-            <li><strong>Ollama pre-configured</strong> - Simple commands to access custom models</li>
-            <li><strong>Complete Workflow:</strong> NVIDIA fine-tuning → GGUF conversion → Ollama deployment → Family access</li>
+            <li><strong>Ollama pre-configured</strong> - Simple commands: ollama run baltimore-family-assistant</li>
+            <li><strong>Complete Workflow:</strong> DGX Spark fine-tuning → GGUF conversion → Ollama deployment → Family access</li>
           </ul>
         </div>
 
@@ -1738,21 +1741,21 @@
             <tbody>
               <tr>
                 <td><strong>Personnel</strong></td>
-                <td class="amount">$95,000</td>
-                <td>38%</td>
-                <td>Program Director ($35K), ML Technical Lead ($40K), 3 Family Facilitators ($20K total)</td>
+                <td class="amount">$100,000</td>
+                <td>40%</td>
+                <td>Program Director ($35K), ML Technical Lead ($45K), 3 Family Facilitators ($20K total)</td>
               </tr>
               <tr>
-                <td><strong>Core AI Infrastructure (Mac Studios for Inference)</strong></td>
+                <td><strong>NVIDIA DGX Spark (Fine-Tuning)</strong></td>
+                <td class="amount">$10,000</td>
+                <td>4%</td>
+                <td>2x NVIDIA DGX Spark @ $4K each = $8K (1 petaflop each, 128GB unified memory, 4TB storage, Blackwell GPU). Clustered for fine-tuning models up to 405B parameters. Export to GGUF via Unsloth's save_pretrained_gguf()</td>
+              </tr>
+              <tr>
+                <td><strong>Mac Studios (Inference & Deployment)</strong></td>
                 <td class="amount">$35,000</td>
                 <td>14%</td>
-                <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access (inference optimized, not fine-tuning)</td>
-              </tr>
-              <tr>
-                <td><strong>Cloud NVIDIA Fine-Tuning</strong></td>
-                <td class="amount">$25,000</td>
-                <td>10%</td>
-                <td>NVIDIA GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning on H100/A100 GPUs - Export to GGUF, deploy to Mac Studios. Workflow: Fine-tune on NVIDIA → Convert to GGUF → Run on Mac Studios via Ollama</td>
+                <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access</td>
               </tr>
               <tr>
                 <td><strong>Take-Home Devices</strong></td>
@@ -1762,15 +1765,15 @@
               </tr>
               <tr>
                 <td><strong>Family Support</strong></td>
-                <td class="amount">$35,000</td>
-                <td>14%</td>
+                <td class="amount">$40,000</td>
+                <td>16%</td>
                 <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
               </tr>
               <tr>
                 <td><strong>Curriculum & Materials</strong></td>
-                <td class="amount">$15,000</td>
-                <td>6%</td>
-                <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials</td>
+                <td class="amount">$20,000</td>
+                <td>8%</td>
+                <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials, AI Literacy Learning platform (Prompt Lab, Tool Builder Studio, RAG Explorer, Model Lab, MCP Server Studio modules)</td>
               </tr>
               <tr>
                 <td><strong>Software & Licenses</strong></td>
@@ -1808,14 +1811,15 @@
         </div>
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
-          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Infrastructure Breakdown (Hybrid NVIDIA + Mac Workflow)</h3>
+          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Infrastructure Breakdown (On-Premises DGX Spark + Mac Studios)</h3>
 
-          <p style="margin-bottom: 12px;"><strong>Cloud NVIDIA Fine-Tuning ($25K):</strong></p>
+          <p style="margin-bottom: 12px;"><strong>NVIDIA DGX Spark Fine-Tuning ($10K):</strong></p>
           <ul class="bullets">
-            <li>H100/A100 GPU credits on RunPod/Lambda Labs: $20K</li>
-            <li>Unsloth fine-tuning experiments and model customization: $3K</li>
-            <li>GGUF conversion and testing: $2K</li>
-            <li><strong>Workflow:</strong> Fine-tune on NVIDIA → Export to GGUF → Deploy to Mac Studios</li>
+            <li>2x NVIDIA DGX Spark @ $3,999 each = $8K</li>
+            <li>Accessories, cables, power: $2K</li>
+            <li><strong>Specs per unit:</strong> 1 petaflop, 128GB unified memory, 4TB NVMe, Blackwell GPU, 170W power</li>
+            <li><strong>Clustered capability:</strong> Fine-tune models up to 405B parameters (GPT-OSS 20B, Llama 3 70B/405B)</li>
+            <li><strong>Workflow:</strong> Unsloth fine-tuning → model.save_pretrained_gguf() → Deploy to Mac Studios</li>
           </ul>
 
           <p style="margin: 12px 0;"><strong>Mac Studios for Inference ($35K):</strong></p>
@@ -1831,7 +1835,7 @@
           <p style="margin: 12px 0;"><strong>Family Devices ($20K):</strong></p>
           <ul class="bullets">
             <li>25x Mini PC kits (Intel N100, 16GB RAM, 512GB SSD) @ $800 = $20K</li>
-            <li>Pre-loaded with Ollama and toolkit platform</li>
+            <li>Pre-loaded with Ollama and AI Literacy Learning platform</li>
             <li>Connect to Mac Studios for custom models or run smaller models locally</li>
             <li>Addresses 20,000 Baltimore families without computers</li>
           </ul>
