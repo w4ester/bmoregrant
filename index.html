@@ -1858,6 +1858,71 @@
 
   <button class="print-button" onclick="window.print()">📄 Export to PDF</button>
 
+  <!-- Feedback Button (Floating) -->
+  <button class="feedback-button" onclick="toggleFeedbackModal()" aria-label="Share Feedback">
+    💬 Feedback
+  </button>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="feedback-modal" style="display: none;">
+    <div class="feedback-modal-content">
+      <button class="feedback-close" onclick="toggleFeedbackModal()" aria-label="Close feedback modal">&times;</button>
+
+      <h2 style="margin-top: 0; color: var(--baltimore-navy);">Share Your Feedback</h2>
+      <p style="color: var(--ink-muted); margin-bottom: 24px;">Help us improve this grant proposal. Choose the easiest method for you:</p>
+
+      <div class="feedback-options">
+        <!-- Email Option -->
+        <a href="mailto:your.email@example.com?subject=Feedback on Baltimore AI Producers Lab Grant&body=Hi! Here's my feedback on the grant proposal:%0D%0A%0D%0A"
+           class="feedback-option">
+          <span class="feedback-icon">📧</span>
+          <div>
+            <strong>Send Email</strong>
+            <p class="small muted">Opens your email app</p>
+          </div>
+        </a>
+
+        <!-- Google Form Option -->
+        <a href="https://forms.google.com/YOUR-FORM-ID"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="feedback-option">
+          <span class="feedback-icon">📝</span>
+          <div>
+            <strong>Quick Form</strong>
+            <p class="small muted">2-minute anonymous survey</p>
+          </div>
+        </a>
+
+        <!-- SMS Option -->
+        <a href="sms:+1234567890&body=Baltimore AI Producers Lab feedback: "
+           class="feedback-option">
+          <span class="feedback-icon">💬</span>
+          <div>
+            <strong>Text Message</strong>
+            <p class="small muted">Send quick feedback via SMS</p>
+          </div>
+        </a>
+
+        <!-- GitHub Issue Option -->
+        <a href="https://github.com/w4ester/bmoregrant/issues/new?title=Feedback:&labels=feedback"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="feedback-option">
+          <span class="feedback-icon">🐙</span>
+          <div>
+            <strong>GitHub Issue</strong>
+            <p class="small muted">Public feedback & discussion</p>
+          </div>
+        </a>
+      </div>
+
+      <p class="small muted" style="margin-top: 20px; text-align: center;">
+        All feedback methods are easy and welcome! Choose what works best for you.
+      </p>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="container">
       <p>Training families to be AI producers, not just consumers.</p>
@@ -1991,6 +2056,35 @@
     console.log('Baltimore AI Producers Lab - Grant Package Loaded');
     console.log('Version: Family Producer Mindset Focus');
     console.log('Ready to change the world! 🚀');
+
+    // Feedback Modal Toggle
+    function toggleFeedbackModal() {
+      const modal = document.getElementById('feedbackModal');
+      if (modal.style.display === 'none' || modal.style.display === '') {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // Close modal when clicking outside of it
+    document.getElementById('feedbackModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'feedbackModal') {
+        toggleFeedbackModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('feedbackModal');
+        if (modal && modal.style.display === 'flex') {
+          toggleFeedbackModal();
+        }
+      }
+    });
   </script>
 </body>
 </html>
