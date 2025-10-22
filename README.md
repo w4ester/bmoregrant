@@ -11,7 +11,7 @@
    - Commit with message: "Add grant strategy page"
 
 3. **Access your new page**:
-   - After uploading, visit: https://w4ester.github.io/bmoregrant/grant-strategy.html
+   - After uploading, visit: https://w4ester.github.io/bmoregrant/
 
 ## Optional: Add Navigation Link
 
