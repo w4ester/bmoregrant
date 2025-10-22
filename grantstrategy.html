@@ -482,9 +482,94 @@
         .back-link:hover {
             transform: translateX(-5px);
         }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .print-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .back-link,
+            .print-button,
+            .nav-bar,
+            .cta-section {
+                display: none !important;
+            }
+
+            .hero {
+                page-break-after: avoid;
+                padding: 40px 20px;
+            }
+
+            .section {
+                page-break-inside: avoid;
+                box-shadow: none;
+                margin-bottom: 20px;
+                padding: 30px;
+            }
+
+            .section-header {
+                page-break-after: avoid;
+            }
+
+            .innovation-card,
+            .metric-card,
+            .timeline-item {
+                page-break-inside: avoid;
+            }
+
+            .innovation-grid {
+                display: block;
+            }
+
+            .innovation-card {
+                margin-bottom: 15px;
+            }
+
+            .budget-table {
+                page-break-inside: auto;
+            }
+
+            .budget-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            h2, h3 {
+                page-break-after: avoid;
+            }
+
+            .timeline::before {
+                background: #4f46e5 !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <button class="print-button" onclick="window.print()">📄 Export to PDF</button>
+    
     <div class="hero">
         <div class="hero-content">
             <a href="index.html" class="back-link">← Back to Grant Tracker</a>
@@ -1054,6 +1139,28 @@
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
+        });
+
+        // Print functionality
+        const printButton = document.querySelector('.print-button');
+        
+        window.addEventListener('beforeprint', () => {
+            console.log('Preparing document for PDF export...');
+        });
+
+        window.addEventListener('afterprint', () => {
+            console.log('PDF export complete or cancelled.');
+        });
+
+        // Alternative: Add download PDF with specific formatting
+        printButton.addEventListener('click', () => {
+            // Show helpful message
+            const originalTitle = document.title;
+            document.title = 'Baltimore-AI-Literacy-Lab-Grant-Strategy';
+            
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
         });
     </script>
 </body>
