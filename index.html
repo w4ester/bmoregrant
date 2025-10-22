@@ -1189,21 +1189,21 @@
           <tbody>
             <tr>
               <td><strong>Personnel</strong></td>
-              <td class="amount">$100,000</td>
-              <td>40%</td>
-              <td>Program Director ($35K), ML Technical Lead ($45K), 3 Family Facilitators ($20K total)</td>
+              <td class="amount">$95,000</td>
+              <td>38%</td>
+              <td>Program Director ($35K), ML Technical Lead ($40K), 3 Family Facilitators ($20K total)</td>
             </tr>
             <tr>
-              <td><strong>Core AI Infrastructure</strong></td>
+              <td><strong>Core AI Infrastructure (Mac Studios for Inference)</strong></td>
               <td class="amount">$35,000</td>
               <td>14%</td>
-              <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - For local fine-tuning with Unsloth and enterprise AI tools</td>
+              <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access (inference optimized, not fine-tuning)</td>
             </tr>
             <tr>
-              <td><strong>Cloud Compute (Backup Only)</strong></td>
-              <td class="amount">$5,000</td>
-              <td>2%</td>
-              <td>Minimal GPU credits for backup compute and testing only - Fine-tuning done locally on 256GB/512GB systems with Unsloth</td>
+              <td><strong>Cloud NVIDIA Fine-Tuning</strong></td>
+              <td class="amount">$25,000</td>
+              <td>10%</td>
+              <td>NVIDIA GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning on H100/A100 GPUs - Export to GGUF, deploy to Mac Studios. Workflow: Fine-tune on NVIDIA → Convert to GGUF → Run on Mac Studios via Ollama</td>
             </tr>
             <tr>
               <td><strong>Take-Home Devices</strong></td>
@@ -1213,14 +1213,14 @@
             </tr>
             <tr>
               <td><strong>Family Support</strong></td>
-              <td class="amount">$40,000</td>
-              <td>16%</td>
+              <td class="amount">$35,000</td>
+              <td>14%</td>
               <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
             </tr>
             <tr>
               <td><strong>Curriculum & Materials</strong></td>
-              <td class="amount">$20,000</td>
-              <td>8%</td>
+              <td class="amount">$15,000</td>
+              <td>6%</td>
               <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials</td>
             </tr>
             <tr>
@@ -1237,8 +1237,8 @@
             </tr>
             <tr>
               <td><strong>Dissemination</strong></td>
-              <td class="amount">$10,000</td>
-              <td>4%</td>
+              <td class="amount">$5,000</td>
+              <td>2%</td>
               <td>Open-source curriculum release (GitHub), community showcase event, documentation</td>
             </tr>
           </tbody>
@@ -1255,28 +1255,31 @@
         </div>
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
-          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Technical Infrastructure</h3>
-          <p style="margin-bottom: 12px;"><strong>Workshop Centers ($35K - Enterprise Local Fine-Tuning):</strong></p>
+          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Technical Infrastructure (Hybrid NVIDIA + Mac Workflow)</h3>
+
+          <p style="margin-bottom: 12px;"><strong>Step 1: Fine-Tuning on Cloud NVIDIA GPUs ($25K):</strong></p>
           <ul class="bullets">
-            <li><strong>2x Mac Studio M3 Ultra</strong> (256GB RAM, 80-core GPU, 4TB SSD) @ ~$8,100 each = $16.2K</li>
-            <li><strong>1x Mac Studio M3 Ultra</strong> (512GB RAM, 80-core GPU, 8TB SSD) @ ~$11,800 = $11.8K</li>
-            <li><strong>Total Mac Studios:</strong> ~$28K (verified retail pricing)</li>
-            <li><strong>Displays, peripherals, networking, storage:</strong> $7K</li>
-            <li><strong>Unsloth integration</strong> - 2x faster fine-tuning, 70% less memory - ALL fine-tuning done on-premises with 256GB/512GB systems</li>
-            <li><strong>Enterprise AI tools</strong> - Professional model optimization and deployment</li>
-            <li><strong>Capability:</strong> Run and fine-tune Llama 3 70B, Mistral, Qwen locally</li>
+            <li><strong>RunPod/Lambda Labs H100/A100 GPUs</strong> - Fast fine-tuning with Unsloth (2x faster, 70% less memory)</li>
+            <li><strong>Workflow:</strong> Fine-tune Llama 3, Mistral, Qwen on powerful NVIDIA hardware</li>
+            <li><strong>Export to GGUF:</strong> Use Unsloth's model.save_pretrained_gguf() or llama.cpp conversion</li>
+            <li><strong>Why NVIDIA?</strong> Best for training/fine-tuning - much faster than Mac Studios</li>
           </ul>
-          <p style="margin: 12px 0;"><strong>Family Take-Home ($20K):</strong></p>
+
+          <p style="margin: 12px 0;"><strong>Step 2: Deploy to Mac Studios for Inference ($35K):</strong></p>
           <ul class="bullets">
-            <li><strong>25x Mini PC kits</strong> @ $800 each - Connect to workshop servers remotely or run smaller models locally</li>
-            <li><strong>Toolkit platform</strong> - Pre-configured environment for building AI tools</li>
-            <li><strong>Offline capability</strong> - Models and tools work without internet (addresses 40.7% without broadband)</li>
+            <li><strong>2x Mac Studio M3 Ultra</strong> (256GB, 80-core GPU, 4TB) @ ~$8,100 = $16.2K</li>
+            <li><strong>1x Mac Studio M3 Ultra</strong> (512GB, 80-core GPU, 8TB) @ ~$11,800 = $11.8K</li>
+            <li><strong>Total:</strong> ~$28K for systems + $7K displays/networking/storage</li>
+            <li><strong>Run GGUF models via Ollama</strong> - Families access custom fine-tuned models locally</li>
+            <li><strong>Offline capability:</strong> Models work without internet (addresses 40.7% without broadband)</li>
+            <li><strong>Why Mac Studios?</strong> Excellent for inference, quiet for workshops, energy efficient</li>
           </ul>
-          <p style="margin: 12px 0;"><strong>Cloud Compute ($5K - Backup Only):</strong></p>
+
+          <p style="margin: 12px 0;"><strong>Step 3: Family Access ($20K):</strong></p>
           <ul class="bullets">
-            <li><strong>Minimal backup compute</strong> - Emergency backup only, NOT for fine-tuning</li>
-            <li><strong>All fine-tuning done locally</strong> - 256GB and 512GB systems handle all model customization with Unsloth</li>
-            <li><strong>Testing environment</strong> - Pre-production validation before deploying to local hardware</li>
+            <li><strong>25x Mini PC kits</strong> @ $800 each - Connect to Mac Studios remotely or run smaller GGUF models locally</li>
+            <li><strong>Ollama pre-configured</strong> - Simple commands to access custom models</li>
+            <li><strong>Complete Workflow:</strong> NVIDIA fine-tuning → GGUF conversion → Ollama deployment → Family access</li>
           </ul>
         </div>
 
@@ -1735,21 +1738,21 @@
             <tbody>
               <tr>
                 <td><strong>Personnel</strong></td>
-                <td class="amount">$100,000</td>
-                <td>40%</td>
-                <td>Program Director ($35K), ML Technical Lead ($45K), 3 Family Facilitators ($20K total)</td>
+                <td class="amount">$95,000</td>
+                <td>38%</td>
+                <td>Program Director ($35K), ML Technical Lead ($40K), 3 Family Facilitators ($20K total)</td>
               </tr>
               <tr>
-                <td><strong>Core AI Infrastructure</strong></td>
+                <td><strong>Core AI Infrastructure (Mac Studios for Inference)</strong></td>
                 <td class="amount">$35,000</td>
                 <td>14%</td>
-                <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - For local fine-tuning with Unsloth and enterprise AI tools</td>
+                <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) + 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) = ~$28K for systems, plus displays/peripherals/networking/storage $7K - Run GGUF models via Ollama for family access (inference optimized, not fine-tuning)</td>
               </tr>
               <tr>
-                <td><strong>Cloud Compute (Backup Only)</strong></td>
-                <td class="amount">$5,000</td>
-                <td>2%</td>
-                <td>Minimal GPU credits for backup compute and testing only - Fine-tuning done locally on 256GB/512GB systems with Unsloth</td>
+                <td><strong>Cloud NVIDIA Fine-Tuning</strong></td>
+                <td class="amount">$25,000</td>
+                <td>10%</td>
+                <td>NVIDIA GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning on H100/A100 GPUs - Export to GGUF, deploy to Mac Studios. Workflow: Fine-tune on NVIDIA → Convert to GGUF → Run on Mac Studios via Ollama</td>
               </tr>
               <tr>
                 <td><strong>Take-Home Devices</strong></td>
@@ -1759,14 +1762,14 @@
               </tr>
               <tr>
                 <td><strong>Family Support</strong></td>
-                <td class="amount">$40,000</td>
-                <td>16%</td>
+                <td class="amount">$35,000</td>
+                <td>14%</td>
                 <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
               </tr>
               <tr>
                 <td><strong>Curriculum & Materials</strong></td>
-                <td class="amount">$20,000</td>
-                <td>8%</td>
+                <td class="amount">$15,000</td>
+                <td>6%</td>
                 <td>Age-appropriate AI literacy workbooks, toolkit templates, documentation, printed materials</td>
               </tr>
               <tr>
@@ -1783,8 +1786,8 @@
               </tr>
               <tr>
                 <td><strong>Dissemination</strong></td>
-                <td class="amount">$10,000</td>
-                <td>4%</td>
+                <td class="amount">$5,000</td>
+                <td>2%</td>
                 <td>Open-source curriculum release (GitHub), community showcase event, documentation</td>
               </tr>
               <tr style="background: var(--paper-dark); font-weight: 700;">
@@ -1805,27 +1808,31 @@
         </div>
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
-          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Infrastructure Breakdown</h3>
-          <p style="margin-bottom: 12px;"><strong>Core AI Systems ($35K - Enterprise Local Fine-Tuning):</strong></p>
+          <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Infrastructure Breakdown (Hybrid NVIDIA + Mac Workflow)</h3>
+
+          <p style="margin-bottom: 12px;"><strong>Cloud NVIDIA Fine-Tuning ($25K):</strong></p>
+          <ul class="bullets">
+            <li>H100/A100 GPU credits on RunPod/Lambda Labs: $20K</li>
+            <li>Unsloth fine-tuning experiments and model customization: $3K</li>
+            <li>GGUF conversion and testing: $2K</li>
+            <li><strong>Workflow:</strong> Fine-tune on NVIDIA → Export to GGUF → Deploy to Mac Studios</li>
+          </ul>
+
+          <p style="margin: 12px 0;"><strong>Mac Studios for Inference ($35K):</strong></p>
           <ul class="bullets">
             <li>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) @ ~$8,100 = $16.2K</li>
             <li>1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) @ ~$11,800 = $11.8K</li>
             <li><strong>Total Mac Studios: ~$28K</strong> (verified retail pricing)</li>
             <li>3x 27" displays, peripherals, cables: $3K</li>
             <li>Network switch, NAS storage, UPS: $4K</li>
-            <li><strong>All fine-tuning done locally</strong> - 256GB/512GB systems with Unsloth and enterprise AI tools</li>
+            <li><strong>Ollama deployment:</strong> Run GGUF models for family access (not fine-tuning)</li>
           </ul>
-          <p style="margin: 12px 0;"><strong>Cloud Compute ($5K - Backup Only):</strong></p>
-          <ul class="bullets">
-            <li>Backup compute for system maintenance: $3K</li>
-            <li>Pre-production testing environment: $2K</li>
-            <li><strong>NO cloud fine-tuning</strong> - All done on-premises with 256GB/512GB hardware</li>
-          </ul>
+
           <p style="margin: 12px 0;"><strong>Family Devices ($20K):</strong></p>
           <ul class="bullets">
             <li>25x Mini PC kits (Intel N100, 16GB RAM, 512GB SSD) @ $800 = $20K</li>
-            <li>Pre-loaded with toolkit platform and offline models</li>
-            <li>Can connect to workshop servers or run models independently</li>
+            <li>Pre-loaded with Ollama and toolkit platform</li>
+            <li>Connect to Mac Studios for custom models or run smaller models locally</li>
             <li>Addresses 20,000 Baltimore families without computers</li>
           </ul>
         </div>
