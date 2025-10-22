@@ -1,4 +1,27 @@
-# Adding Grant Strategy Page to Your Repository
+# Baltimore AI Producers Lab - Grant Application
+
+Complete grant package with interactive features for the $250K Baltimore AI Producers Lab program.
+
+## 🆕 New Features
+
+### AI Chatbot Assistant 🤖
+A GPT-5-nano powered chatbot that answers questions about the grant! See [CHATBOT-SETUP.md](CHATBOT-SETUP.md) for setup.
+
+**Features:**
+- Answers questions about budget, timeline, team, technical infrastructure
+- Uses GPT-5-nano ($0.05/1M tokens - super cheap!)
+- Baltimore-branded blue gradient UI
+- Mobile responsive
+- ~$0.36/month for 1,000 conversations
+
+**Quick Setup:**
+1. Copy `config.example.js` to `config.js`
+2. Add your OpenAI API key
+3. Done! Chatbot appears bottom-left
+
+For production (secure), use Cloudflare Workers proxy - see full guide in [CHATBOT-SETUP.md](CHATBOT-SETUP.md).
+
+---
 
 ## Quick Start
 
