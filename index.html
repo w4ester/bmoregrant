@@ -1186,21 +1186,21 @@
           <tbody>
             <tr>
               <td><strong>Personnel</strong></td>
-              <td class="amount">$85,000</td>
-              <td>34%</td>
-              <td>Program Director ($28K), ML Technical Lead ($38K), 3 Family Facilitators ($19K total)</td>
+              <td class="amount">$80,000</td>
+              <td>32%</td>
+              <td>Program Director ($28K), ML Technical Lead ($36K), 3 Family Facilitators ($16K total)</td>
             </tr>
             <tr>
               <td><strong>Core AI Infrastructure</strong></td>
-              <td class="amount">$75,000</td>
-              <td>30%</td>
-              <td>2x Mac Studio M3 Ultra (192GB, 80-core GPU, 4TB) @ $11.5K, 1x Mac Studio M3 Ultra (192GB, 80-core GPU, 8TB) @ $13K, displays/peripherals $15K, networking/NAS storage $24K</td>
+              <td class="amount">$95,000</td>
+              <td>38%</td>
+              <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) @ $16K, 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) @ $22K, displays/peripherals $15K, networking/NAS storage $24K - For local fine-tuning with Unsloth and enterprise AI tools</td>
             </tr>
             <tr>
-              <td><strong>Cloud Compute & Fine-Tuning</strong></td>
-              <td class="amount">$18,000</td>
-              <td>7%</td>
-              <td>GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning experiments, model hosting, backup compute</td>
+              <td><strong>Cloud Compute (Backup Only)</strong></td>
+              <td class="amount">$5,000</td>
+              <td>2%</td>
+              <td>Minimal GPU credits for backup compute and testing only - Fine-tuning done locally on 256GB/512GB systems with Unsloth</td>
             </tr>
             <tr>
               <td><strong>Take-Home Devices</strong></td>
@@ -1210,8 +1210,8 @@
             </tr>
             <tr>
               <td><strong>Family Support</strong></td>
-              <td class="amount">$30,000</td>
-              <td>12%</td>
+              <td class="amount">$27,000</td>
+              <td>11%</td>
               <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
             </tr>
             <tr>
@@ -1234,8 +1234,8 @@
             </tr>
             <tr>
               <td><strong>Dissemination</strong></td>
-              <td class="amount">$2,500</td>
-              <td>1%</td>
+              <td class="amount">$1,500</td>
+              <td>0.6%</td>
               <td>Open-source curriculum release (GitHub), community showcase event</td>
             </tr>
           </tbody>
@@ -1244,21 +1244,22 @@
         <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--brand);">
           <h3 style="color: var(--brand-dark); margin-bottom: 12px;">💰 Economic Impact</h3>
           <ul class="bullets">
-            <li><strong>Cost per family (Year 1):</strong> $2,500 per family (includes hardware + 6 months support)</li>
+            <li><strong>Cost per family (Year 1):</strong> $2,500 per family (includes enterprise-grade local infrastructure with 256GB/512GB fine-tuning capability + 6 months support)</li>
             <li><strong>Traditional AI/ML bootcamp:</strong> $12,000-15,000 per person</li>
             <li><strong>At scale (Year 3):</strong> $800 per family (hardware amortization + shared infrastructure)</li>
-            <li><strong>True ownership:</strong> Families own tools forever, models run locally, zero ongoing subscription costs</li>
+            <li><strong>True ownership:</strong> Families own tools forever, models fine-tuned and run locally with enterprise tools, zero ongoing subscription costs</li>
           </ul>
         </div>
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
           <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Technical Infrastructure</h3>
-          <p style="margin-bottom: 12px;"><strong>Workshop Centers ($75K):</strong></p>
+          <p style="margin-bottom: 12px;"><strong>Workshop Centers ($95K - Enterprise Local Fine-Tuning):</strong></p>
           <ul class="bullets">
-            <li><strong>2x Mac Studio M3 Ultra</strong> (192GB RAM, 80-core GPU, 4TB SSD) @ $11.5K each - Run Llama 3 70B, Mistral, Qwen models locally</li>
-            <li><strong>1x Mac Studio M3 Ultra</strong> (192GB RAM, 80-core GPU, 8TB SSD) @ $13K - High-capacity model storage and fine-tuning workstation</li>
-            <li><strong>Unsloth integration</strong> - 2x faster fine-tuning, 70% less memory usage for experimenting with custom models</li>
-            <li><strong>24TB NAS storage</strong> - Local model library with pre-downloaded models for offline workshops</li>
+            <li><strong>2x Mac Studio M3 Ultra</strong> (256GB RAM, 80-core GPU, 4TB SSD) @ $16K each - Run and fine-tune Llama 3 70B, Mistral, Qwen models locally</li>
+            <li><strong>1x Mac Studio M3 Ultra</strong> (512GB RAM, 80-core GPU, 8TB SSD) @ $22K - High-capacity fine-tuning workstation for enterprise-grade model customization</li>
+            <li><strong>Unsloth integration</strong> - 2x faster fine-tuning, 70% less memory usage - ALL fine-tuning done on-premises with 256GB/512GB systems</li>
+            <li><strong>Enterprise AI tools</strong> - Professional model optimization and deployment tools</li>
+            <li><strong>24TB NAS storage</strong> - Local model library with pre-downloaded models and fine-tuned variants for offline workshops</li>
             <li><strong>10Gbps networking</strong> - Fast model distribution to family devices</li>
           </ul>
           <p style="margin: 12px 0;"><strong>Family Take-Home ($16K):</strong></p>
@@ -1267,11 +1268,11 @@
             <li><strong>Toolkit platform</strong> - Pre-configured environment for building AI tools</li>
             <li><strong>Offline capability</strong> - Models and tools work without internet</li>
           </ul>
-          <p style="margin: 12px 0;"><strong>Cloud Compute ($18K - Hybrid):</strong></p>
+          <p style="margin: 12px 0;"><strong>Cloud Compute ($5K - Backup Only):</strong></p>
           <ul class="bullets">
-            <li><strong>Unsloth fine-tuning experiments</strong> - GPU credits for advanced model customization on RunPod/Lambda Labs</li>
-            <li><strong>Model hosting</strong> - Remote family access during off-hours and testing before local deployment</li>
-            <li><strong>Backup compute</strong> - Ensures program continuity during hardware maintenance</li>
+            <li><strong>Minimal backup compute</strong> - Emergency backup only, NOT for fine-tuning</li>
+            <li><strong>All fine-tuning done locally</strong> - 256GB and 512GB systems handle all model customization with Unsloth</li>
+            <li><strong>Testing environment</strong> - Pre-production validation before deploying to local hardware</li>
           </ul>
         </div>
 
@@ -1721,21 +1722,21 @@
             <tbody>
               <tr>
                 <td><strong>Personnel</strong></td>
-                <td class="amount">$85,000</td>
-                <td>34%</td>
-                <td>Program Director ($28K), ML Technical Lead ($38K), 3 Family Facilitators ($19K total)</td>
+                <td class="amount">$80,000</td>
+                <td>32%</td>
+                <td>Program Director ($28K), ML Technical Lead ($36K), 3 Family Facilitators ($16K total)</td>
               </tr>
               <tr>
                 <td><strong>Core AI Infrastructure</strong></td>
-                <td class="amount">$75,000</td>
-                <td>30%</td>
-                <td>2x Mac Studio M3 Ultra (192GB, 80-core GPU, 4TB) @ $11.5K, 1x Mac Studio M3 Ultra (192GB, 80-core GPU, 8TB) @ $13K, displays/peripherals $15K, networking/NAS storage $24K</td>
+                <td class="amount">$95,000</td>
+                <td>38%</td>
+                <td>2x Mac Studio M3 Ultra (256GB, 80-core GPU, 4TB) @ $16K, 1x Mac Studio M3 Ultra (512GB, 80-core GPU, 8TB) @ $22K, displays/peripherals $15K, networking/NAS storage $24K - For local fine-tuning with Unsloth and enterprise AI tools</td>
               </tr>
               <tr>
-                <td><strong>Cloud Compute & Fine-Tuning</strong></td>
-                <td class="amount">$18,000</td>
-                <td>7%</td>
-                <td>GPU credits (RunPod/Lambda Labs) for Unsloth fine-tuning experiments, model hosting, backup compute</td>
+                <td><strong>Cloud Compute (Backup Only)</strong></td>
+                <td class="amount">$5,000</td>
+                <td>2%</td>
+                <td>Minimal GPU credits for backup compute and testing only - Fine-tuning done locally on 256GB/512GB systems with Unsloth</td>
               </tr>
               <tr>
                 <td><strong>Take-Home Devices</strong></td>
@@ -1745,8 +1746,8 @@
               </tr>
               <tr>
                 <td><strong>Family Support</strong></td>
-                <td class="amount">$30,000</td>
-                <td>12%</td>
+                <td class="amount">$27,000</td>
+                <td>11%</td>
                 <td>Childcare (on-site), transportation stipends, workshop meals, completion incentives</td>
               </tr>
               <tr>
@@ -1769,8 +1770,8 @@
               </tr>
               <tr>
                 <td><strong>Dissemination</strong></td>
-                <td class="amount">$2,500</td>
-                <td>1%</td>
+                <td class="amount">$1,500</td>
+                <td>0.6%</td>
                 <td>Open-source curriculum release (GitHub), community showcase event</td>
               </tr>
               <tr style="background: var(--paper-dark); font-weight: 700;">
@@ -1792,19 +1793,20 @@
 
         <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%); padding: 24px; border-radius: 10px; margin-top: 20px; border-left: 5px solid var(--accent);">
           <h3 style="color: var(--accent-dark); margin-bottom: 12px;">🖥️ Infrastructure Breakdown</h3>
-          <p style="margin-bottom: 12px;"><strong>Core AI Systems ($75K):</strong></p>
+          <p style="margin-bottom: 12px;"><strong>Core AI Systems ($95K - Enterprise Local Fine-Tuning):</strong></p>
           <ul class="bullets">
-            <li>2x Mac Studio M3 Ultra (192GB RAM, 80-core GPU, 4TB) @ $11.5K = $23K</li>
-            <li>1x Mac Studio M3 Ultra (192GB RAM, 80-core GPU, 8TB) @ $13K = $13K</li>
+            <li>2x Mac Studio M3 Ultra (256GB RAM, 80-core GPU, 4TB) @ $16K = $32K</li>
+            <li>1x Mac Studio M3 Ultra (512GB RAM, 80-core GPU, 8TB) @ $22K = $22K</li>
             <li>3x 27" 5K displays @ $1.6K = $4.8K</li>
-            <li>Peripherals, cables, adapters: $10.2K</li>
+            <li>Peripherals, cables, adapters: $12.2K</li>
             <li>10Gbps network switch, 24TB NAS storage, UPS: $24K</li>
+            <li><strong>All fine-tuning done locally</strong> - 256GB/512GB systems with Unsloth and enterprise AI tools</li>
           </ul>
-          <p style="margin: 12px 0;"><strong>Cloud GPU Compute ($18K):</strong></p>
+          <p style="margin: 12px 0;"><strong>Cloud Compute ($5K - Backup Only):</strong></p>
           <ul class="bullets">
-            <li>Unsloth fine-tuning experiments: $11K</li>
-            <li>Model hosting for remote family access: $4K</li>
-            <li>Backup compute during workshops: $3K</li>
+            <li>Backup compute for system maintenance: $3K</li>
+            <li>Pre-production testing environment: $2K</li>
+            <li><strong>NO cloud fine-tuning</strong> - All done on-premises with 256GB/512GB hardware</li>
           </ul>
           <p style="margin: 12px 0;"><strong>Family Devices ($16K):</strong></p>
           <ul class="bullets">
