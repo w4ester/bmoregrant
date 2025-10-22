@@ -172,9 +172,9 @@ Answer questions clearly and concisely. If you don't know something specific, be
     this.addTypingIndicator();
 
     try {
-      // Check if CONFIG is loaded
-      if (typeof CONFIG === 'undefined' || !CONFIG.OPENAI_API_KEY || CONFIG.OPENAI_API_KEY.includes('your-api-key-here')) {
-        throw new Error('API key not configured. Please see README.md for setup instructions.');
+      // Check if ENV is loaded
+      if (typeof window.ENV === 'undefined' || !window.ENV.OPENAI_API_KEY || window.ENV.OPENAI_API_KEY.includes('your-api-key-here')) {
+        throw new Error('API key not configured. Please create env.js from env.example.js');
       }
 
       const response = await this.callOpenAI(message);
@@ -185,7 +185,7 @@ Answer questions clearly and concisely. If you don't know something specific, be
     } catch (error) {
       this.removeTypingIndicator();
       this.addMessage(
-        `⚠️ Error: ${error.message}\n\nPlease check your API key configuration in config.js`,
+        `⚠️ Error: ${error.message}\n\nPlease check your API key in env.js`,
         'bot error'
       );
     } finally {
@@ -198,17 +198,17 @@ Answer questions clearly and concisely. If you don't know something specific, be
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${CONFIG.OPENAI_API_KEY}`
+        'Authorization': `Bearer ${window.ENV.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: CONFIG.MODEL || 'gpt-5-nano',
+        model: window.ENV.OPENAI_MODEL || 'gpt-5-nano',
         messages: [
           { role: 'system', content: this.systemPrompt },
           ...this.messages.slice(-6), // Last 6 messages for context
           { role: 'user', content: userMessage }
         ],
-        max_tokens: CONFIG.MAX_TOKENS || 500,
-        temperature: CONFIG.TEMPERATURE || 0.7
+        max_tokens: window.ENV.OPENAI_MAX_TOKENS || 500,
+        temperature: window.ENV.OPENAI_TEMPERATURE || 0.7
       })
     });
 
@@ -270,11 +270,11 @@ Answer questions clearly and concisely. If you don't know something specific, be
 
 // Initialize chatbot when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Only initialize if config is loaded
-  if (typeof CONFIG !== 'undefined') {
+  // Only initialize if env is loaded
+  if (typeof window.ENV !== 'undefined') {
     window.grantChatbot = new GrantChatbot();
-    console.log('Grant Chatbot initialized with', CONFIG.MODEL);
+    console.log('Grant Chatbot initialized with', window.ENV.OPENAI_MODEL);
   } else {
-    console.warn('Chatbot not initialized: config.js not found. See config.example.js');
+    console.warn('Chatbot not initialized: env.js not found. Copy env.example.js to env.js and add your API key');
   }
 });

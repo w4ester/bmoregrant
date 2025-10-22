@@ -23,22 +23,35 @@ A smart AI chatbot powered by OpenAI's GPT-5-nano that answers questions about t
 3. Click "Create new secret key"
 4. Copy the key (starts with `sk-proj-...`)
 
-### 2. Create config.js
+### 2. Create .env file
 
 ```bash
-cp config.example.js config.js
+cp .env.example .env
 ```
 
-### 3. Add Your API Key
+Edit `.env` and add your API key:
 
-Open `config.js` and replace the placeholder:
+```bash
+OPENAI_API_KEY=sk-proj-YOUR-ACTUAL-KEY-HERE
+OPENAI_MODEL=gpt-5-nano
+OPENAI_MAX_TOKENS=500
+OPENAI_TEMPERATURE=0.7
+```
+
+### 3. Create env.js
+
+```bash
+cp env.example.js env.js
+```
+
+Edit `env.js` and add your API key (same as in .env):
 
 ```javascript
-const CONFIG = {
+window.ENV = {
   OPENAI_API_KEY: 'sk-proj-YOUR-ACTUAL-KEY-HERE',
-  MODEL: 'gpt-5-nano',
-  MAX_TOKENS: 500,
-  TEMPERATURE: 0.7
+  OPENAI_MODEL: 'gpt-5-nano',
+  OPENAI_MAX_TOKENS: 500,
+  OPENAI_TEMPERATURE: 0.7
 };
 ```
 
@@ -234,7 +247,7 @@ Similar to Vercel but using Netlify's platform.
 
 ## Model Options
 
-You can use different OpenAI models by changing the `MODEL` in config.js:
+You can use different OpenAI models by changing `OPENAI_MODEL` in your .env file:
 
 | Model | Cost (per 1M tokens) | Best For |
 |-------|---------------------|----------|
@@ -295,12 +308,12 @@ In `styles.css`, find `.grant-chatbot`:
 
 ### Chatbot button doesn't appear
 - Check browser console for errors
-- Make sure `config.js` exists (if using direct API)
-- Verify script tags are loaded: `<script src="chatbot.js"></script>`
+- Make sure `env.js` exists (copy from env.example.js)
+- Verify script tags are loaded: `<script src="env.js"></script>` and `<script src="chatbot.js"></script>`
 
 ### "API key not configured" error
-- Copy `config.example.js` to `config.js`
-- Add your OpenAI API key
+- Copy `env.example.js` to `env.js`
+- Add your OpenAI API key from your `.env` file
 - Refresh the page
 
 ### Chatbot appears but doesn't respond
@@ -312,13 +325,13 @@ In `styles.css`, find `.grant-chatbot`:
 ### "Model not found" error
 - GPT-5 models released in August 2025
 - If unavailable, use `gpt-4o-mini` instead
-- Update MODEL in config.js
+- Update OPENAI_MODEL in your .env and env.js files
 
 ---
 
 ## Security Checklist
 
-✅ **config.js is in .gitignore** (never commit API keys!)
+✅ **.env and env.js are in .gitignore** (never commit API keys!)
 ✅ **Use proxy in production** (Cloudflare Worker recommended)
 ✅ **Set spending limits** in OpenAI dashboard
 ✅ **Monitor usage** regularly
