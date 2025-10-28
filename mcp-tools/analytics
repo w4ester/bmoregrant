@@ -1,0 +1,593 @@
+#!/usr/bin/env bash
+
+# MCP Analytics Tool
+# Aggregates MCP server usage across all projects to help humans make data-driven decisions
+# about model fine-tuning, skill development, and context optimization.
+
+set -euo pipefail
+
+VERSION="1.0.0"
+REGISTRY_DIR="${HOME}/.mcp-registry"
+USAGE_LOGS_DIR="${REGISTRY_DIR}/usage-logs"
+AGGREGATED_LOG="${USAGE_LOGS_DIR}/aggregated.json"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Helper functions
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Initialize MCP registry structure
+init_registry() {
+    log_info "Initializing MCP registry at ${REGISTRY_DIR}..."
+
+    mkdir -p "${REGISTRY_DIR}"/{tools/{pending,approved,rejected},toolkits,skills,usage-logs,examples}
+
+    # Create security wall config if it doesn't exist
+    if [[ ! -f "${REGISTRY_DIR}/security-wall.json" ]]; then
+        cat > "${REGISTRY_DIR}/security-wall.json" <<'EOF'
+{
+  "approvalRules": {
+    "requireManualReview": true,
+    "trustedSources": [
+      "@modelcontextprotocol/*",
+      "@anthropic/*"
+    ],
+    "blockedPatterns": [
+      "*eval*",
+      "*exec*",
+      "*shell*"
+    ],
+    "securityChecks": {
+      "scanForSecrets": true,
+      "checkDependencies": true,
+      "validateSignatures": true
+    }
+  },
+  "approvalWorkflow": {
+    "pending": "tools/pending/",
+    "approved": "tools/approved/",
+    "rejected": "tools/rejected/"
+  }
+}
+EOF
+        log_success "Created security-wall.json"
+    fi
+
+    # Create empty aggregated log if it doesn't exist
+    if [[ ! -f "${AGGREGATED_LOG}" ]]; then
+        echo '{"tools":{},"patterns":[],"projects":{},"lastUpdated":null}' > "${AGGREGATED_LOG}"
+        log_success "Created aggregated usage log"
+    fi
+
+    log_success "MCP registry initialized at ${REGISTRY_DIR}"
+}
+
+# Scan all projects for mcp-usage.log files
+scan_projects() {
+    local search_root="${1:-${HOME}}"
+    log_info "Scanning for MCP usage logs in ${search_root}..."
+
+    local found=0
+    while IFS= read -r -d '' logfile; do
+        log_info "Found: ${logfile}"
+        ((found++))
+    done < <(find "${search_root}" -type f -name "mcp-usage.log" -print0 2>/dev/null || true)
+
+    if [[ ${found} -eq 0 ]]; then
+        log_warn "No mcp-usage.log files found in ${search_root}"
+        log_info "Usage logs should be created at the root of each project using MCP servers"
+        return 1
+    fi
+
+    log_success "Found ${found} usage log(s)"
+    return 0
+}
+
+# Aggregate usage data from all projects
+aggregate_usage() {
+    local search_root="${1:-${HOME}}"
+    log_info "Aggregating MCP usage data from ${search_root}..."
+
+    if [[ ! -d "${USAGE_LOGS_DIR}" ]]; then
+        log_error "Registry not initialized. Run 'mcp-analytics init' first."
+        return 1
+    fi
+
+    local temp_aggregate=$(mktemp)
+    local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+    # Initialize aggregated structure
+    cat > "${temp_aggregate}" <<EOF
+{
+  "tools": {},
+  "patterns": {},
+  "projects": {},
+  "lastUpdated": "${timestamp}",
+  "totalEvents": 0
+}
+EOF
+
+    local total_logs=0
+    local total_events=0
+
+    # Find and process all mcp-usage.log files
+    while IFS= read -r -d '' logfile; do
+        ((total_logs++))
+        local project_dir=$(dirname "${logfile}")
+        local project_name=$(basename "${project_dir}")
+
+        log_info "Processing ${project_name}..."
+
+        # Use Python to aggregate JSON data (more reliable than bash for JSON)
+        if command -v python3 &> /dev/null; then
+            python3 -c "
+import json
+import sys
+
+try:
+    with open('${logfile}', 'r') as f:
+        log_data = json.load(f)
+
+    with open('${temp_aggregate}', 'r') as f:
+        agg_data = json.load(f)
+
+    # Aggregate tool usage
+    for entry in log_data.get('toolUsage', []):
+        tool = entry.get('tool')
+        if tool:
+            if tool not in agg_data['tools']:
+                agg_data['tools'][tool] = {
+                    'totalUses': 0,
+                    'successCount': 0,
+                    'failureCount': 0,
+                    'totalExecutionTime': 0,
+                    'projects': []
+                }
+
+            agg_data['tools'][tool]['totalUses'] += 1
+            agg_data['totalEvents'] += 1
+
+            if entry.get('success', False):
+                agg_data['tools'][tool]['successCount'] += 1
+            else:
+                agg_data['tools'][tool]['failureCount'] += 1
+
+            agg_data['tools'][tool]['totalExecutionTime'] += entry.get('executionTime', 0)
+
+            if '${project_name}' not in agg_data['tools'][tool]['projects']:
+                agg_data['tools'][tool]['projects'].append('${project_name}')
+
+    # Aggregate patterns
+    for pattern_entry in log_data.get('patterns', []):
+        pattern = pattern_entry.get('pattern')
+        if pattern:
+            if pattern not in agg_data['patterns']:
+                agg_data['patterns'][pattern] = {
+                    'frequency': 0,
+                    'projects': []
+                }
+
+            agg_data['patterns'][pattern]['frequency'] += pattern_entry.get('frequency', 1)
+
+            if '${project_name}' not in agg_data['patterns'][pattern]['projects']:
+                agg_data['patterns'][pattern]['projects'].append('${project_name}')
+
+    # Track projects
+    if '${project_name}' not in agg_data['projects']:
+        agg_data['projects']['${project_name}'] = {
+            'path': '${project_dir}',
+            'toolCount': len(log_data.get('toolUsage', []))
+        }
+
+    with open('${temp_aggregate}', 'w') as f:
+        json.dump(agg_data, f, indent=2)
+
+    sys.exit(0)
+except Exception as e:
+    print(f'Error processing ${logfile}: {e}', file=sys.stderr)
+    sys.exit(1)
+" || log_warn "Failed to process ${logfile}"
+        else
+            log_warn "Python3 not found. Skipping JSON aggregation for ${logfile}"
+        fi
+    done < <(find "${search_root}" -type f -name "mcp-usage.log" -print0 2>/dev/null || true)
+
+    if [[ ${total_logs} -eq 0 ]]; then
+        log_error "No usage logs found to aggregate"
+        rm -f "${temp_aggregate}"
+        return 1
+    fi
+
+    # Move temp file to final location
+    mv "${temp_aggregate}" "${AGGREGATED_LOG}"
+
+    log_success "Aggregated ${total_logs} usage log(s) into ${AGGREGATED_LOG}"
+}
+
+# Display analytics report
+show_report() {
+    if [[ ! -f "${AGGREGATED_LOG}" ]]; then
+        log_error "No aggregated data found. Run 'mcp-analytics aggregate' first."
+        return 1
+    fi
+
+    if ! command -v python3 &> /dev/null; then
+        log_error "Python3 is required to display reports"
+        return 1
+    fi
+
+    python3 <<'PYEOF'
+import json
+import sys
+from datetime import datetime
+
+try:
+    with open(f"{sys.argv[1]}", 'r') as f:
+        data = json.load(f)
+
+    tools = data.get('tools', {})
+    patterns = data.get('patterns', {})
+    projects = data.get('projects', {})
+    last_updated = data.get('lastUpdated', 'Never')
+    total_events = data.get('totalEvents', 0)
+
+    # Calculate total uses
+    total_uses = sum(t.get('totalUses', 0) for t in tools.values())
+
+    print("=" * 65)
+    print(" MCP Tool Usage Analytics".center(65))
+    print(f" Last Updated: {last_updated}".center(65))
+    print(f" Total Projects: {len(projects)} | Total Events: {total_events}".center(65))
+    print("=" * 65)
+
+    if total_uses == 0:
+        print("\nNo usage data collected yet.")
+        print("Create mcp-usage.log files in your projects to track tool usage.")
+        sys.exit(0)
+
+    # Top Tools
+    print("\nTop Tools by Usage:")
+    print("-" * 65)
+    sorted_tools = sorted(tools.items(), key=lambda x: x[1].get('totalUses', 0), reverse=True)
+
+    for i, (tool, stats) in enumerate(sorted_tools[:10], 1):
+        uses = stats.get('totalUses', 0)
+        success = stats.get('successCount', 0)
+        failures = stats.get('failureCount', 0)
+        percentage = (uses / total_uses * 100) if total_uses > 0 else 0
+        success_rate = (success / uses * 100) if uses > 0 else 0
+
+        bar_length = int(percentage / 2)
+        bar = '█' * bar_length
+
+        print(f"{i:2}. {tool:20} {uses:4} uses ({percentage:5.1f}%)  {bar}")
+        print(f"    Success rate: {success_rate:5.1f}% | Projects: {', '.join(stats.get('projects', []))}")
+
+    # Common Patterns
+    if patterns:
+        print("\n" + "=" * 65)
+        print("Common Patterns:")
+        print("-" * 65)
+        sorted_patterns = sorted(patterns.items(), key=lambda x: x[1].get('frequency', 0), reverse=True)
+
+        for pattern, stats in sorted_patterns[:5]:
+            freq = stats.get('frequency', 0)
+            projects_list = stats.get('projects', [])
+            print(f"  • {pattern}: {freq} occurrences")
+            print(f"    Projects: {', '.join(projects_list)}")
+
+    # Insights
+    print("\n" + "=" * 65)
+    print("Insights:")
+    print("-" * 65)
+
+    if len(tools) >= 3:
+        top_three = sorted_tools[:3]
+        top_three_pct = sum(t[1].get('totalUses', 0) for t in top_three) / total_uses * 100
+        tool_names = ', '.join(t[0] for t in top_three)
+        print(f"  ✓ Your top 3 tools ({tool_names})")
+        print(f"    account for {top_three_pct:.1f}% of all usage.")
+        print(f"    Consider fine-tuning your model on these workflows.\n")
+
+    # Look for tools with high usage but low success rate
+    for tool, stats in sorted_tools:
+        uses = stats.get('totalUses', 0)
+        success = stats.get('successCount', 0)
+        if uses >= 10:
+            success_rate = (success / uses * 100) if uses > 0 else 0
+            if success_rate < 80:
+                print(f"  ⚠ {tool} has {uses} uses but only {success_rate:.1f}% success rate.")
+                print(f"    Review usage patterns or configuration.\n")
+
+    # Pattern-based insights
+    if len(patterns) >= 3:
+        print(f"  💡 Detected {len(patterns)} usage patterns across projects.")
+        print(f"    Consider creating composite skills for frequent patterns.\n")
+
+    print("=" * 65)
+
+except FileNotFoundError:
+    print("Error: Aggregated log file not found", file=sys.stderr)
+    sys.exit(1)
+except json.JSONDecodeError:
+    print("Error: Invalid JSON in aggregated log", file=sys.stderr)
+    sys.exit(1)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    sys.exit(1)
+PYEOF
+python3 -c "import sys; exec(open('/dev/stdin').read())" "${AGGREGATED_LOG}" < <(cat <<'PYEOF'
+import json
+import sys
+from datetime import datetime
+
+try:
+    with open(f"{sys.argv[1]}", 'r') as f:
+        data = json.load(f)
+
+    tools = data.get('tools', {})
+    patterns = data.get('patterns', {})
+    projects = data.get('projects', {})
+    last_updated = data.get('lastUpdated', 'Never')
+    total_events = data.get('totalEvents', 0)
+
+    # Calculate total uses
+    total_uses = sum(t.get('totalUses', 0) for t in tools.values())
+
+    print("=" * 65)
+    print(" MCP Tool Usage Analytics".center(65))
+    print(f" Last Updated: {last_updated}".center(65))
+    print(f" Total Projects: {len(projects)} | Total Events: {total_events}".center(65))
+    print("=" * 65)
+
+    if total_uses == 0:
+        print("\nNo usage data collected yet.")
+        print("Create mcp-usage.log files in your projects to track tool usage.")
+        sys.exit(0)
+
+    # Top Tools
+    print("\nTop Tools by Usage:")
+    print("-" * 65)
+    sorted_tools = sorted(tools.items(), key=lambda x: x[1].get('totalUses', 0), reverse=True)
+
+    for i, (tool, stats) in enumerate(sorted_tools[:10], 1):
+        uses = stats.get('totalUses', 0)
+        success = stats.get('successCount', 0)
+        failures = stats.get('failureCount', 0)
+        percentage = (uses / total_uses * 100) if total_uses > 0 else 0
+        success_rate = (success / uses * 100) if uses > 0 else 0
+
+        bar_length = int(percentage / 2)
+        bar = '█' * bar_length
+
+        print(f"{i:2}. {tool:20} {uses:4} uses ({percentage:5.1f}%)  {bar}")
+        print(f"    Success rate: {success_rate:5.1f}% | Projects: {', '.join(stats.get('projects', []))}")
+
+    # Common Patterns
+    if patterns:
+        print("\n" + "=" * 65)
+        print("Common Patterns:")
+        print("-" * 65)
+        sorted_patterns = sorted(patterns.items(), key=lambda x: x[1].get('frequency', 0), reverse=True)
+
+        for pattern, stats in sorted_patterns[:5]:
+            freq = stats.get('frequency', 0)
+            projects_list = stats.get('projects', [])
+            print(f"  • {pattern}: {freq} occurrences")
+            print(f"    Projects: {', '.join(projects_list)}")
+
+    # Insights
+    print("\n" + "=" * 65)
+    print("Insights:")
+    print("-" * 65)
+
+    if len(tools) >= 3:
+        top_three = sorted_tools[:3]
+        top_three_pct = sum(t[1].get('totalUses', 0) for t in top_three) / total_uses * 100
+        tool_names = ', '.join(t[0] for t in top_three)
+        print(f"  ✓ Your top 3 tools ({tool_names})")
+        print(f"    account for {top_three_pct:.1f}% of all usage.")
+        print(f"    Consider fine-tuning your model on these workflows.\n")
+
+    # Look for tools with high usage but low success rate
+    for tool, stats in sorted_tools:
+        uses = stats.get('totalUses', 0)
+        success = stats.get('successCount', 0)
+        if uses >= 10:
+            success_rate = (success / uses * 100) if uses > 0 else 0
+            if success_rate < 80:
+                print(f"  ⚠ {tool} has {uses} uses but only {success_rate:.1f}% success rate.")
+                print(f"    Review usage patterns or configuration.\n")
+
+    # Pattern-based insights
+    if len(patterns) >= 3:
+        print(f"  💡 Detected {len(patterns)} usage patterns across projects.")
+        print(f"    Consider creating composite skills for frequent patterns.\n")
+
+    print("=" * 65)
+
+except FileNotFoundError:
+    print("Error: Aggregated log file not found", file=sys.stderr)
+    sys.exit(1)
+except json.JSONDecodeError:
+    print("Error: Invalid JSON in aggregated log", file=sys.stderr)
+    sys.exit(1)
+except Exception as e:
+    print(f"Error: {e}", file=sys.stderr)
+    sys.exit(1)
+PYEOF
+)
+}
+
+# Show top N most used tools
+show_top_tools() {
+    local limit="${1:-10}"
+
+    if [[ ! -f "${AGGREGATED_LOG}" ]]; then
+        log_error "No aggregated data found. Run 'mcp-analytics aggregate' first."
+        return 1
+    fi
+
+    if ! command -v python3 &> /dev/null; then
+        log_error "Python3 is required"
+        return 1
+    fi
+
+    python3 -c "
+import json
+import sys
+
+with open('${AGGREGATED_LOG}', 'r') as f:
+    data = json.load(f)
+
+tools = data.get('tools', {})
+sorted_tools = sorted(tools.items(), key=lambda x: x[1].get('totalUses', 0), reverse=True)
+
+print(f'Top ${limit} MCP Tools:')
+print('-' * 50)
+
+for i, (tool, stats) in enumerate(sorted_tools[:${limit}], 1):
+    uses = stats.get('totalUses', 0)
+    projects = len(stats.get('projects', []))
+    print(f'{i:2}. {tool:20} {uses:5} uses across {projects} project(s)')
+"
+}
+
+# Show usage patterns
+show_patterns() {
+    if [[ ! -f "${AGGREGATED_LOG}" ]]; then
+        log_error "No aggregated data found. Run 'mcp-analytics aggregate' first."
+        return 1
+    fi
+
+    if ! command -v python3 &> /dev/null; then
+        log_error "Python3 is required"
+        return 1
+    fi
+
+    python3 -c "
+import json
+
+with open('${AGGREGATED_LOG}', 'r') as f:
+    data = json.load(f)
+
+patterns = data.get('patterns', {})
+sorted_patterns = sorted(patterns.items(), key=lambda x: x[1].get('frequency', 0), reverse=True)
+
+if not patterns:
+    print('No patterns detected yet.')
+    print('Patterns are detected by analyzing sequential tool usage in your projects.')
+    exit(0)
+
+print('Common MCP Usage Patterns:')
+print('-' * 60)
+
+for pattern, stats in sorted_patterns:
+    freq = stats.get('frequency', 0)
+    projects = stats.get('projects', [])
+    print(f'  • {pattern}')
+    print(f'    Frequency: {freq} | Projects: {', '.join(projects)}')
+    print()
+"
+}
+
+# Display help
+show_help() {
+    cat <<EOF
+MCP Analytics Tool v${VERSION}
+
+Tracks MCP server usage across all projects to help you make data-driven
+decisions about model fine-tuning, skill development, and context optimization.
+
+USAGE:
+    mcp-analytics <command> [options]
+
+COMMANDS:
+    init                     Initialize MCP registry structure at ~/.mcp-registry
+    scan [path]             Scan for mcp-usage.log files (default: \$HOME)
+    aggregate [path]        Aggregate usage data from all projects (default: \$HOME)
+    report                  Display comprehensive analytics report
+    top [N]                 Show top N most-used tools (default: 10)
+    patterns                Show common usage patterns
+    help                    Show this help message
+
+EXAMPLES:
+    # Initialize registry and scan current directory
+    mcp-analytics init
+    mcp-analytics scan .
+
+    # Aggregate data from all projects under home directory
+    mcp-analytics aggregate
+
+    # View full analytics report
+    mcp-analytics report
+
+    # Show top 5 most-used tools
+    mcp-analytics top 5
+
+    # Show usage patterns
+    mcp-analytics patterns
+
+WORKFLOW:
+    1. Set up MCP servers in ~/.claude.json or project .mcp.json
+    2. Create mcp-usage.log files in your projects to track usage
+    3. Run 'mcp-analytics aggregate' periodically to collect data
+    4. Use 'mcp-analytics report' to view insights and make decisions
+
+For more information, see mcp-tools/README.md
+EOF
+}
+
+# Main command dispatcher
+main() {
+    case "${1:-help}" in
+        init)
+            init_registry
+            ;;
+        scan)
+            scan_projects "${2:-${HOME}}"
+            ;;
+        aggregate)
+            aggregate_usage "${2:-${HOME}}"
+            ;;
+        report)
+            show_report
+            ;;
+        top)
+            show_top_tools "${2:-10}"
+            ;;
+        patterns)
+            show_patterns
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            log_error "Unknown command: $1"
+            echo ""
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

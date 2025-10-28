@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MCP Usage Log",
+  "description": "Schema for project-level MCP tool usage logs",
+  "type": "object",
+  "required": ["project", "toolUsage"],
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Project name or identifier"
+    },
+    "toolkit": {
+      "type": "string",
+      "description": "Toolkit configuration used (if any)"
+    },
+    "toolUsage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "tool", "action", "success"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the tool was used (ISO 8601)"
+          },
+          "tool": {
+            "type": "string",
+            "description": "Tool identifier (matches tool definition ID)"
+          },
+          "action": {
+            "type": "string",
+            "description": "Action performed (e.g., 'read', 'write', 'commit')"
+          },
+          "context": {
+            "type": "string",
+            "description": "Human-readable context for this usage"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation succeeded"
+          },
+          "executionTime": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Execution time in milliseconds"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if success is false"
+          }
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pattern", "frequency"],
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Pattern identifier (e.g., 'edit-commit-push')"
+          },
+          "frequency": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of times pattern occurred"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Confidence score (0-1)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable pattern description"
+          }
+        }
+      }
+    }
+  }
+}

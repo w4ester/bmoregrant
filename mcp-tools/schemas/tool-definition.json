@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MCP Tool Definition",
+  "description": "Schema for defining MCP server tools in the registry",
+  "type": "object",
+  "required": ["id", "status", "definition"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the tool"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected"],
+      "description": "Security approval status"
+    },
+    "definition": {
+      "type": "object",
+      "required": ["command"],
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "Command to execute (e.g., 'npx', 'node')"
+        },
+        "args": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Command arguments"
+        },
+        "env": {
+          "type": "object",
+          "description": "Environment variables"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Tool description"
+        },
+        "category": {
+          "type": "string",
+          "description": "Tool category (e.g., 'filesystem', 'web', 'git')"
+        },
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Search tags"
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "totalUses": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of uses across all projects"
+        },
+        "successRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Success rate percentage"
+        },
+        "averageExecutionTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average execution time in milliseconds"
+        },
+        "commonPatterns": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Common usage patterns"
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "canEvolveInto": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Skills this tool can evolve into"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "approvedBy": {
+          "type": "string",
+          "description": "Who approved this tool"
+        },
+        "approvedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the tool was approved"
+        },
+        "securityNotes": {
+          "type": "string",
+          "description": "Security review notes"
+        }
+      }
+    }
+  }
+}

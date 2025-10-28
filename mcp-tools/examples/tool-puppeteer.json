@@ -1,0 +1,36 @@
+{
+  "id": "puppeteer",
+  "status": "approved",
+  "definition": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+  },
+  "metadata": {
+    "name": "Puppeteer Browser Control",
+    "description": "Browser automation and screenshot capture",
+    "category": "web",
+    "tags": ["browser", "automation", "screenshot", "testing"]
+  },
+  "usage": {
+    "totalUses": 98,
+    "successRate": 94.2,
+    "averageExecutionTime": 2340,
+    "commonPatterns": [
+      "screenshot after HTML edit",
+      "visual verification after CSS changes",
+      "UI testing after feature implementation"
+    ]
+  },
+  "skills": {
+    "canEvolveInto": [
+      "ui-testing-skill",
+      "visual-qa-skill",
+      "screenshot-documentation-skill"
+    ]
+  },
+  "security": {
+    "approvedBy": "user",
+    "approvedAt": "2025-10-28T00:00:00Z",
+    "securityNotes": "Official MCP server from @modelcontextprotocol org. Safe for use."
+  }
+}

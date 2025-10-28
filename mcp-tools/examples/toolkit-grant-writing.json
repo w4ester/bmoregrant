@@ -1,0 +1,79 @@
+{
+  "id": "grant-writing",
+  "name": "Grant Writing Toolkit",
+  "description": "Tools for collaborative grant application development",
+  "requiredTools": [
+    "filesystem",
+    "git"
+  ],
+  "recommendedTools": [
+    "puppeteer",
+    "github"
+  ],
+  "optionalTools": [
+    "fetch"
+  ],
+  "systemPrompt": "You are working on a grant application. Use filesystem for document editing, git for version control, and puppeteer to verify visual layout. Follow these rules:\n- No emojis in git commits\n- Use 'Captain Code' attribution\n- Always verify HTML changes with screenshots\n- Commit after each significant change",
+  "workflows": [
+    {
+      "name": "update-and-verify",
+      "description": "Standard workflow for updating grant documents",
+      "steps": [
+        {
+          "tool": "filesystem",
+          "action": "read",
+          "description": "Read current document"
+        },
+        {
+          "tool": "filesystem",
+          "action": "write",
+          "description": "Make requested changes"
+        },
+        {
+          "tool": "git",
+          "action": "commit",
+          "description": "Commit changes"
+        },
+        {
+          "tool": "puppeteer",
+          "action": "screenshot",
+          "description": "Verify visual layout",
+          "optional": true,
+          "condition": "if HTML/CSS changed"
+        }
+      ]
+    },
+    {
+      "name": "review-and-publish",
+      "description": "Review changes and create pull request",
+      "steps": [
+        {
+          "tool": "git",
+          "action": "status",
+          "description": "Check current changes"
+        },
+        {
+          "tool": "git",
+          "action": "diff",
+          "description": "Review differences"
+        },
+        {
+          "tool": "git",
+          "action": "push",
+          "description": "Push to remote"
+        },
+        {
+          "tool": "github",
+          "action": "create-pr",
+          "description": "Create pull request"
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "totalUses": 156,
+    "projectsUsed": ["bmoregrant", "youth-media-grant-2024"],
+    "averageSessionLength": 3600,
+    "mostUsedWorkflow": "update-and-verify"
+  }
+}

@@ -16,11 +16,11 @@ PROGRAM OVERVIEW:
 - 30 families (up to 100 Baltimore residents total)
 - $250,000 total budget ($8,333 per family for Year 1 pilot)
 - 6-month program teaching families to BUILD AI tools (not just use them)
-- Starting at age 12, family-based learning approach
+- Starting at age 14, family-based learning approach
 - Producer-first mindset: create AI tools, don't just consume them
 
 KEY INNOVATIONS:
-- Start young (age 12) before consumer habits form
+- Start young (age 14) before consumer habits form
 - Family learning model (entire households learn together)
 - Local models (work offline, true ownership, no subscriptions)
 - Hands-on curriculum: Prompt Lab, Tool Builder Studio, RAG Explorer, Model Lab, MCP Server Studio
