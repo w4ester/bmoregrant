@@ -1,0 +1,36 @@
+{
+  "toolkit": "grant-writing",
+  "description": "Spawned from universal MCP registry for grant application development",
+  "registryPath": "~/.mcp-registry/toolkits/grant-writing.json",
+  "customizations": {
+    "git": {
+      "committer": "Captain Code <captaincode@bmoregrant.ai>",
+      "rules": [
+        "No emojis in commit messages",
+        "Use descriptive commit messages",
+        "Always include Co-Authored-By: Captain Code"
+      ]
+    },
+    "filesystem": {
+      "watchPaths": [
+        "index.html",
+        "chatbot.js",
+        "styles.css"
+      ]
+    },
+    "puppeteer": {
+      "autoScreenshot": true,
+      "screenshotOnHTMLChange": true
+    }
+  },
+  "projectSpecificTools": [],
+  "disabledTools": [],
+  "workflows": {
+    "preferred": "update-and-verify",
+    "beforeCommit": [
+      "verify-no-emojis",
+      "check-attribution"
+    ]
+  },
+  "notes": "This project uses the grant-writing toolkit from the universal registry. See ~/.mcp-registry/toolkits/grant-writing.json for the base configuration."
+}
